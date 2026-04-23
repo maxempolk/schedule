@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Расписание</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f0f0f;
+  --border: rgba(255,255,255,0.07);
+  --text: #f0ede8;
+  --muted: rgba(240,237,232,0.45);
+  --hint: rgba(240,237,232,0.2);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── HEADER ── */
+header {
+  padding: 1.5rem 2rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.header-left h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.header-left .sub {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+
+.clock {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  tabular-nums: true;
+}
+
+/* ── CURRENT TASK BANNER ── */
+.current-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+  flex-wrap: wrap;
+}
+
+.now-label {
+  font-size: 11px;
+  color: var(--hint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.now-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e24b4a;
+  flex-shrink: 0;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.7); }
+}
+
+.now-task {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.now-until {
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* ── DAY TABS ── */
+.day-nav {
+  display: flex;
+  gap: 4px;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.day-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  padding: 7px 15px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-radius: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.day-btn:hover { border-color: rgba(255,255,255,0.25); color: var(--text); }
+.day-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+.day-btn.today-tab { border-color: rgba(226,75,74,0.5); }
+.day-btn.today-tab.active { background: #e24b4a; color: #fff; border-color: #e24b4a; }
+
+/* ── MAIN LAYOUT ── */
+.main {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  min-height: calc(100vh - 200px);
+}
+
+.sidebar {
+  border-right: 1px solid var(--border);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.day-big {
+  font-family: 'Fraunces', serif;
+  font-size: 3rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.day-name-full {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+
+.stats { display: flex; flex-direction: column; gap: 13px; }
+.stat-item { display: flex; flex-direction: column; gap: 4px; }
+.stat-label { font-size: 11px; color: var(--hint); letter-spacing: 0.1em; text-transform: uppercase; }
+.stat-value { font-size: 16px; }
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.leg-item { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--muted); }
+.leg-dot { width: 9px; height: 9px; border-radius: 1px; flex-shrink: 0; }
+
+/* ── TIMELINE ── */
+.timeline { padding: 1.5rem 2rem 2rem 4rem; position: relative; }
+.tl-rel { position: relative; }
+
+.evt-block {
+  position: absolute;
+  left: 0; right: 0;
+  border-radius: 4px;
+  padding: 9px 13px;
+  overflow: hidden;
+  border-left: 3px solid;
+  transition: transform 0.12s;
+}
+
+.evt-block:hover { transform: translateX(3px); }
+.evt-block.active-block { outline: 1px solid rgba(226,75,74,0.5); }
+
+.evt-name {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.evt-time { font-size: 12px; opacity: 0.65; margin-top: 3px; }
+
+/* ── TIME NEEDLE ── */
+.needle {
+  position: absolute;
+  left: -8px;
+  right: 0;
+  height: 2px;
+  background: #e24b4a;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.needle::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e24b4a;
+  flex-shrink: 0;
+}
+
+/* ── OUTSIDE HOURS ── */
+.off-hours {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--hint);
+  padding: 3rem 0;
+  text-align: center;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 680px) {
+  .main { grid-template-columns: 1fr; }
+  .sidebar { border-right: none; border-bottom: 1px solid var(--border); padding: 1.25rem 1.5rem; flex-direction: row; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .legend { display: none; }
+  .stats { flex-direction: row; margin-top: 0; }
+  .day-big { font-size: 2rem; }
+  header { flex-direction: column; align-items: flex-start; }
+  .timeline { padding: 1.5rem 1rem 2rem 3.5rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Моё расписание</h1>
+    <div class="sub" id="todayLabel">—</div>
+  </div>
+  <div class="clock" id="clock">00:00</div>
+</header>
+
+<div class="current-banner">
+  <div class="now-dot"></div>
+  <span class="now-label">Сейчас</span>
+  <span class="now-task" id="nowTask">—</span>
+  <span class="now-until" id="nowUntil"></span>
+</div>
+
+<nav class="day-nav" id="dayNav"></nav>
+
+<div class="main">
+  <aside class="sidebar">
+    <div>
+      <div class="day-big" id="dayBig">—</div>
+      <div class="day-name-full" id="dayNameFull">—</div>
+    </div>
+    <div class="stats" id="statsBox"></div>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#5DCAA5"></div>курсы (норв.)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#EF9F27"></div>английский</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#85B7EB"></div>ученики</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#AFA9EC"></div>программирование</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#97C459"></div>спорт</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#888780"></div>быт</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#F0997B"></div>диплом / универ</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#3a3a38"></div>отдых</div>
+    </div>
+  </aside>
+
+  <section class="timeline">
+    <div class="tl-rel" id="tlRel"></div>
+  </section>
+</div>
+
+<script>
+const DAYS_RU = ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
+const DAYS_SHORT = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+
+const C = {
+  courses:  { bg:'rgba(93,202,165,0.13)',  border:'#5DCAA5', text:'#9FE1CB' },
+  eng:      { bg:'rgba(239,159,39,0.13)',  border:'#EF9F27', text:'#FAC775' },
+  student:  { bg:'rgba(133,183,235,0.13)', border:'#85B7EB', text:'#B5D4F4' },
+  code:     { bg:'rgba(175,169,236,0.15)', border:'#AFA9EC', text:'#CECBF6' },
+  sport:    { bg:'rgba(151,196,89,0.13)',  border:'#97C459', text:'#C0DD97' },
+  home:     { bg:'rgba(136,135,128,0.13)', border:'#888780', text:'#B4B2A9' },
+  diploma:  { bg:'rgba(240,153,123,0.13)', border:'#F0997B', text:'#F5C4B3' },
+  rest:     { bg:'rgba(50,50,48,0.55)',    border:'#3a3a38', text:'#888780' },
+};
+
+// dayIndex: 0=Вс,1=Пн,2=Вт,3=Ср,4=Чт,5=Пт,6=Сб (JS getDay order)
+const SCH = {
+  1: [ // ПН
+    { h:7,  m:30, dur:1,    label:'Подъём + утро',          type:'rest' },
+    { h:8,  m:30, dur:5.5,  label:'Курсы (норвежский)',      type:'courses' },
+    { h:14, m:0,  dur:0.5,  label:'Обед / пауза',            type:'rest' },
+    { h:14, m:30, dur:1,    label:'Быт / готовка',            type:'home' },
+    { h:15, m:30, dur:1.5,  label:'Спорт',                    type:'sport' },
+    { h:17, m:0,  dur:2,    label:'Буфер / отдых',            type:'rest' },
+    { h:19, m:0,  dur:1,    label:'Английский (репетитор)',   type:'eng' },
+    { h:20, m:0,  dur:2,    label:'Программирование',         type:'code' },
+    { h:22, m:0,  dur:0.5,  label:'Завершение дня',           type:'rest' },
+  ],
+  2: [ // ВТ
+    { h:7,  m:30, dur:1,    label:'Подъём + утро',          type:'rest' },
+    { h:8,  m:30, dur:5.5,  label:'Курсы (норвежский)',      type:'courses' },
+    { h:14, m:0,  dur:0.5,  label:'Обед / пауза',            type:'rest' },
+    { h:14, m:30, dur:1,    label:'Английский (самост.)',    type:'eng' },
+    { h:15, m:30, dur:1,    label:'Быт / готовка',            type:'home' },
+    { h:16, m:30, dur:1.5,  label:'Буфер / отдых',            type:'rest' },
+    { h:18, m:0,  dur:1,    label:'Дима (ученик)',             type:'student' },
+    { h:19, m:0,  dur:2.5,  label:'Программирование',         type:'code' },
+    { h:21, m:30, dur:1,    label:'Завершение дня',           type:'rest' },
+  ],
+  3: [ // СР
+    { h:7,  m:30, dur:1,    label:'Подъём + утро',          type:'rest' },
+    { h:8,  m:30, dur:5.5,  label:'Курсы (норвежский)',      type:'courses' },
+    { h:14, m:0,  dur:0.5,  label:'Обед / пауза',            type:'rest' },
+    { h:14, m:30, dur:1,    label:'Быт / готовка',            type:'home' },
+    { h:15, m:30, dur:1.5,  label:'Буфер / отдых',            type:'rest' },
+    { h:17, m:0,  dur:2,    label:'Программирование',         type:'code' },
+    { h:19, m:0,  dur:1,    label:'Английский (репетитор)',   type:'eng' },
+    { h:20, m:0,  dur:2,    label:'Программирование',         type:'code' },
+    { h:22, m:0,  dur:0.5,  label:'Завершение дня',           type:'rest' },
+  ],
+  4: [ // ЧТ
+    { h:7,  m:30, dur:1,    label:'Подъём + утро',          type:'rest' },
+    { h:8,  m:30, dur:5.5,  label:'Курсы (норвежский)',      type:'courses' },
+    { h:14, m:0,  dur:0.5,  label:'Обед / пауза',            type:'rest' },
+    { h:14, m:30, dur:1,    label:'Английский (самост.)',    type:'eng' },
+    { h:15, m:30, dur:1,    label:'Быт / готовка',            type:'home' },
+    { h:16, m:30, dur:2.5,  label:'Буфер / отдых',            type:'rest' },
+    { h:19, m:0,  dur:1,    label:'Таня (ученица)',            type:'student' },
+    { h:20, m:0,  dur:2,    label:'Программирование',         type:'code' },
+    { h:22, m:0,  dur:0.5,  label:'Завершение дня',           type:'rest' },
+  ],
+  5: [ // ПТ
+    { h:7,  m:30, dur:1,    label:'Подъём + утро',          type:'rest' },
+    { h:8,  m:30, dur:5.5,  label:'Курсы (норвежский)',      type:'courses' },
+    { h:14, m:0,  dur:0.5,  label:'Обед / пауза',            type:'rest' },
+    { h:14, m:30, dur:1,    label:'Английский (самост.)',    type:'eng' },
+    { h:15, m:30, dur:1,    label:'Быт / готовка',            type:'home' },
+    { h:16, m:30, dur:1.5,  label:'Спорт',                    type:'sport' },
+    { h:18, m:0,  dur:2,    label:'Программирование',         type:'code' },
+    { h:20, m:0,  dur:1,    label:'Анастасия (ученица)',      type:'student' },
+    { h:21, m:0,  dur:1,    label:'Буфер / отдых',            type:'rest' },
+    { h:22, m:0,  dur:0.5,  label:'Завершение дня',           type:'rest' },
+  ],
+  6: [ // СБ
+    { h:9,  m:0,  dur:1,    label:'Подъём + утро',          type:'rest' },
+    { h:10, m:0,  dur:3,    label:'Диплом / универ',         type:'diploma' },
+    { h:13, m:0,  dur:1,    label:'Обед / отдых',            type:'rest' },
+    { h:14, m:0,  dur:3.5,  label:'Программирование',         type:'code' },
+    { h:17, m:30, dur:1,    label:'Быт / готовка',            type:'home' },
+    { h:18, m:30, dur:2,    label:'Свободное время',          type:'rest' },
+    { h:20, m:30, dur:1.5,  label:'Программирование',         type:'code' },
+    { h:22, m:0,  dur:0.5,  label:'Завершение дня',           type:'rest' },
+  ],
+  0: [ // ВС
+    { h:9,  m:0,  dur:1.5,  label:'Подъём + утро',          type:'rest' },
+    { h:10, m:30, dur:2.5,  label:'Диплом / универ',         type:'diploma' },
+    { h:13, m:0,  dur:1,    label:'Обед / отдых',            type:'rest' },
+    { h:14, m:0,  dur:3,    label:'Программирование',         type:'code' },
+    { h:17, m:0,  dur:2,    label:'Свободное время',          type:'rest' },
+    { h:19, m:0,  dur:1.5,  label:'Диплом / универ',         type:'diploma' },
+    { h:20, m:30, dur:1.5,  label:'Программирование',         type:'code' },
+    { h:22, m:0,  dur:0.5,  label:'Подготовка к неделе',      type:'home' },
+  ],
+};
+
+const PX = 66;
+const START = 7;
+const END = 23;
+
+function toTop(h, m) { return ((h - START) + m / 60) * PX; }
+function toH(dur)    { return dur * PX; }
+
+function evtStartMin(e) { return e.h * 60 + e.m; }
+function evtEndMin(e)   { return evtStartMin(e) + e.dur * 60; }
+
+function fmt(h, m, dur) {
+  const total = h + dur;
+  const eh = Math.floor(total);
+  const em = Math.round((total - eh) * 60);
+  return `${h}:${String(m).padStart(2,'0')} — ${eh}:${String(em).padStart(2,'0')}`;
+}
+
+function pad2(n) { return String(n).padStart(2,'0'); }
+
+// ── Audio ──
+let audioCtx = null;
+function getCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playBell() {
+  try {
+    const ctx = getCtx();
+    const freqs = [880, 1100, 660];
+    freqs.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      const t = ctx.currentTime + i * 0.18;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.25, t + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+      osc.start(t);
+      osc.stop(t + 0.65);
+    });
+  } catch(e) {}
+}
+
+// ── State ──
+let viewDayIdx = new Date().getDay();
+let lastActiveEvtLabel = null;
+
+// ── Build day tabs ──
+const navEl = document.getElementById('dayNav');
+// JS getDay: 0=Sun, reorder to Mon-first display
+const tabOrder = [1,2,3,4,5,6,0];
+const tabLabels = { 0:'Вс',1:'Пн',2:'Вт',3:'Ср',4:'Чт',5:'Пт',6:'Сб' };
+
+tabOrder.forEach(jsDay => {
+  const btn = document.createElement('button');
+  btn.className = 'day-btn';
+  btn.textContent = tabLabels[jsDay];
+  btn.dataset.day = jsDay;
+  btn.onclick = () => { viewDayIdx = jsDay; renderTimeline(); updateTabs(); };
+  navEl.appendChild(btn);
+});
+
+function updateTabs() {
+  const todayJs = new Date().getDay();
+  document.querySelectorAll('.day-btn').forEach(btn => {
+    const d = parseInt(btn.dataset.day);
+    btn.classList.toggle('active', d === viewDayIdx);
+    btn.classList.toggle('today-tab', d === todayJs);
+  });
+}
+
+// ── Render timeline for viewDayIdx ──
+function renderTimeline() {
+  const evts = SCH[viewDayIdx] || [];
+  const totalH = END - START;
+
+  document.getElementById('dayBig').textContent = tabLabels[viewDayIdx];
+  document.getElementById('dayNameFull').textContent = DAYS_RU[viewDayIdx];
+
+  const codeMin    = evts.filter(e=>e.type==='code').reduce((a,e)=>a+e.dur,0)*60;
+  const engMin     = evts.filter(e=>e.type==='eng').reduce((a,e)=>a+e.dur,0)*60;
+  const diplomaMin = evts.filter(e=>e.type==='diploma').reduce((a,e)=>a+e.dur,0)*60;
+
+  let statsHtml = `
+    <div class="stat-item"><div class="stat-label">Код</div><div class="stat-value">${codeMin > 0 ? Math.round(codeMin) + ' мин' : '—'}</div></div>
+    <div class="stat-item"><div class="stat-label">Английский</div><div class="stat-value">${engMin > 0 ? Math.round(engMin) + ' мин' : '—'}</div></div>`;
+  if (diplomaMin > 0) statsHtml += `<div class="stat-item"><div class="stat-label">Диплом</div><div class="stat-value">${Math.round(diplomaMin)} мин</div></div>`;
+  document.getElementById('statsBox').innerHTML = statsHtml;
+
+  const rel = document.getElementById('tlRel');
+  rel.style.height = (totalH * PX) + 'px';
+  rel.innerHTML = '';
+
+  // Hour lines
+  for (let h = START; h < END; h++) {
+    const t = (h - START) * PX;
+    const row = document.createElement('div');
+    row.style.cssText = `position:absolute;top:${t}px;left:-3rem;right:0;pointer-events:none;`;
+    row.innerHTML = `<span style="position:absolute;left:0;top:1px;font-size:12px;color:rgba(240,237,232,0.2);letter-spacing:0.04em;white-space:nowrap;">${h}:00</span><div style="position:absolute;left:3rem;right:0;top:0;height:1px;background:rgba(255,255,255,0.05);"></div>`;
+    rel.appendChild(row);
+  }
+
+  // Event blocks
+  evts.forEach((e, i) => {
+    const col = C[e.type];
+    const t = toTop(e.h, e.m);
+    const h = Math.max(toH(e.dur) - 3, 34);
+    const div = document.createElement('div');
+    div.className = 'evt-block';
+    div.id = `evt-${viewDayIdx}-${i}`;
+    div.style.cssText = `top:${t}px;height:${h}px;background:${col.bg};border-left-color:${col.border};`;
+    div.innerHTML = `<div class="evt-name" style="color:${col.text}">${e.label}</div><div class="evt-time" style="color:${col.text}">${fmt(e.h, e.m, e.dur)}</div>`;
+    rel.appendChild(div);
+  });
+
+  // Needle placeholder (will be positioned by tick)
+  const needle = document.createElement('div');
+  needle.className = 'needle';
+  needle.id = 'needle';
+  needle.style.display = 'none';
+  rel.appendChild(needle);
+
+  updateNeedle();
+  highlightActive();
+}
+
+// ── Get current event for a given day & minutes-since-midnight ──
+function getCurrentEvt(dayIdx, nowMin) {
+  const evts = SCH[dayIdx] || [];
+  return evts.find(e => nowMin >= evtStartMin(e) && nowMin < evtEndMin(e)) || null;
+}
+
+// ── Update needle position ──
+function updateNeedle() {
+  const now = new Date();
+  const todayJs = now.getDay();
+  if (viewDayIdx !== todayJs) {
+    const n = document.getElementById('needle');
+    if (n) n.style.display = 'none';
+    return;
+  }
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  if (now.getHours() < START || now.getHours() >= END) {
+    const n = document.getElementById('needle');
+    if (n) n.style.display = 'none';
+    return;
+  }
+  const topPx = toTop(now.getHours(), now.getMinutes() + now.getSeconds() / 60);
+  const n = document.getElementById('needle');
+  if (n) {
+    n.style.display = 'flex';
+    n.style.top = topPx + 'px';
+  }
+}
+
+// ── Highlight currently active block ──
+function highlightActive() {
+  const now = new Date();
+  const todayJs = now.getDay();
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+
+  document.querySelectorAll('.evt-block').forEach(el => el.classList.remove('active-block'));
+
+  if (viewDayIdx === todayJs) {
+    const evts = SCH[viewDayIdx] || [];
+    evts.forEach((e, i) => {
+      if (nowMin >= evtStartMin(e) && nowMin < evtEndMin(e)) {
+        const el = document.getElementById(`evt-${viewDayIdx}-${i}`);
+        if (el) el.classList.add('active-block');
+      }
+    });
+  }
+}
+
+// ── Update top banner (current task) ──
+function updateBanner() {
+  const now = new Date();
+  const todayJs = now.getDay();
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  const cur = getCurrentEvt(todayJs, nowMin);
+
+  const taskEl  = document.getElementById('nowTask');
+  const untilEl = document.getElementById('nowUntil');
+
+  if (cur) {
+    const endMin = evtEndMin(cur);
+    const remaining = endMin - nowMin;
+    const rh = Math.floor(remaining / 60);
+    const rm = remaining % 60;
+    const untilStr = rh > 0 ? `ещё ${rh}ч ${rm}мин` : `ещё ${rm} мин`;
+    taskEl.textContent = cur.label;
+    taskEl.style.color = C[cur.type].text;
+    untilEl.textContent = untilStr;
+
+    // Bell on block change
+    if (lastActiveEvtLabel !== null && lastActiveEvtLabel !== cur.label) {
+      playBell();
+    }
+    lastActiveEvtLabel = cur.label;
+  } else {
+    taskEl.textContent = 'Вне расписания';
+    taskEl.style.color = 'var(--muted)';
+    untilEl.textContent = '';
+    lastActiveEvtLabel = null;
+  }
+}
+
+// ── Update clock & date label ──
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = `${pad2(now.getHours())}:${pad2(now.getMinutes())}:${pad2(now.getSeconds())}`;
+
+  const todayJs = now.getDay();
+  const dateStr = now.toLocaleDateString('ru-RU', { weekday:'long', day:'numeric', month:'long' });
+  document.getElementById('todayLabel').textContent = dateStr;
+}
+
+// ── Init ──
+viewDayIdx = new Date().getDay();
+updateTabs();
+renderTimeline();
+updateClock();
+updateBanner();
+
+// Enable AudioContext on first interaction
+document.addEventListener('click', () => { try { getCtx(); } catch(e){} }, { once: true });
+
+// Tick every second
+setInterval(() => {
+  updateClock();
+  updateBanner();
+  updateNeedle();
+  highlightActive();
+}, 1000);
+</script>
+</body>
+</html>
