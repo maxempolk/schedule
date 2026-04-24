@@ -1,7 +1,7 @@
-const DAYS_RU = ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
-const DAYS_SHORT = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+export const DAYS_RU = ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
+export const DAYS_SHORT = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
 
-const C = {
+export const C = {
   courses:  { bg:'rgba(93,202,165,0.13)',  border:'#5DCAA5', text:'#9FE1CB' },
   eng:      { bg:'rgba(239,159,39,0.13)',  border:'#EF9F27', text:'#FAC775' },
   student:  { bg:'rgba(133,183,235,0.13)', border:'#85B7EB', text:'#B5D4F4' },
@@ -14,7 +14,7 @@ const C = {
 
 // dayIndex: 0=Вс,1=Пн,2=Вт,3=Ср,4=Чт,5=Пт,6=Сб (JS getDay order)
 // Каждое событие: h — час начала, m — минуты начала, dur — длительность в часах, label — название, type — тип (цвет)
-const SCH = {
+export const SCH = {
   1: [ // ПН
     { h:7,  m:30, dur:1,    label:'Подъём + утро',          type:'rest' },
     { h:8,  m:30, dur:5.5,  label:'Курсы (норвежский)',      type:'courses' },
