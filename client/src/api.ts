@@ -23,6 +23,17 @@ async function apiFetch(input: string, init?: RequestInit): Promise<Response> {
   return res;
 }
 
+export async function bulkUpdateEvents(
+  updates: Array<{ id: number; h: number; m: number; dur: number }>
+): Promise<void> {
+  const res = await apiFetch('/api/schedule/bulk', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) throw new Error('Failed to update events');
+}
+
 export async function fetchSchedule(): Promise<Schedule> {
   const res = await apiFetch('/api/schedule');
   if (!res.ok) throw new Error(`Failed to fetch schedule: ${res.status}`);

@@ -88,7 +88,14 @@ const App: FC = () => {
       <div className="main">
         <Sidebar viewDay={viewDay} events={viewEvents} />
         <section className="timeline">
-          <Timeline viewDay={viewDay} todayJs={todayJs} now={now} nowMin={nowMin} events={viewEvents} />
+          <Timeline
+            viewDay={viewDay}
+            todayJs={todayJs}
+            now={now}
+            nowMin={nowMin}
+            events={viewEvents}
+            onUpdateEvents={evts => setSchedule(prev => ({ ...prev, [viewDay]: evts }))}
+          />
         </section>
       </div>
     </>

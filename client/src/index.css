@@ -203,6 +203,27 @@ header {
 
 .evt-time { font-size: 12px; opacity: 0.65; margin-top: 3px; }
 
+/* ── RESIZE HANDLES ── */
+.resize-handle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.35);
+  cursor: ns-resize;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 5;
+}
+
+.resize-handle-top    { top: 4px; }
+.resize-handle-bottom { bottom: 4px; }
+
+.evt-block:hover .resize-handle { opacity: 1; }
+.evt-block.is-resizing { outline: 1px solid rgba(255,255,255,0.2); z-index: 2; }
+
 /* ── TIME NEEDLE ── */
 .needle {
   position: absolute;
