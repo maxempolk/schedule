@@ -1,16 +1,16 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, FC } from 'react';
 import { SCH } from './data';
-import { evtStartMin, evtEndMin, playBell } from './utils';
+import { evtStartMin, evtEndMin, playBell, Event } from './utils';
 import Header from './components/Header';
 import CurrentBanner from './components/CurrentBanner';
 import DayNav from './components/DayNav';
 import Sidebar from './components/Sidebar';
 import Timeline from './components/Timeline';
 
-export default function App() {
-  const [viewDay, setViewDay] = useState(() => new Date().getDay());
-  const [now, setNow]         = useState(() => new Date());
-  const lastLabelRef          = useRef(null);
+const App: FC = () => {
+  const [viewDay, setViewDay] = useState<number>(() => new Date().getDay());
+  const [now, setNow] = useState<Date>(() => new Date());
+  const lastLabelRef = useRef<string | null>(null);
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
@@ -18,19 +18,31 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    document.addEventListener('click', () => {
-      try { new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
-    }, { once: true });
+    document.addEventListener(
+      'click',
+      () => {
+        try {
+          const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+          new AudioContextClass();
+        } catch (e) {
+          // Ignore
+        }
+      },
+      { once: true }
+    );
   }, []);
 
   const todayJs = now.getDay();
-  const nowMin  = now.getHours() * 60 + now.getMinutes();
-  const curEvt  = (SCH[todayJs] || []).find(
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  const curEvt = (SCH[todayJs] || []).find(
     e => nowMin >= evtStartMin(e) && nowMin < evtEndMin(e)
   ) ?? null;
 
   useEffect(() => {
-    if (!curEvt) { lastLabelRef.current = null; return; }
+    if (!curEvt) {
+      lastLabelRef.current = null;
+      return;
+    }
     if (lastLabelRef.current !== null && lastLabelRef.current !== curEvt.label) playBell();
     lastLabelRef.current = curEvt.label;
   }, [curEvt?.label]);
@@ -48,4 +60,6 @@ export default function App() {
       </div>
     </>
   );
-}
+};
+
+export default App;

@@ -1,0 +1,108 @@
+export const DAYS_RU = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+export const DAYS_SHORT = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+
+interface ColorScheme {
+  bg: string;
+  border: string;
+  text: string;
+}
+
+type ColorType = 'courses' | 'eng' | 'student' | 'code' | 'sport' | 'home' | 'diploma' | 'rest';
+
+export const C: Record<ColorType, ColorScheme> = {
+  courses: { bg: 'rgba(93,202,165,0.13)', border: '#5DCAA5', text: '#9FE1CB' },
+  eng: { bg: 'rgba(239,159,39,0.13)', border: '#EF9F27', text: '#FAC775' },
+  student: { bg: 'rgba(133,183,235,0.13)', border: '#85B7EB', text: '#B5D4F4' },
+  code: { bg: 'rgba(175,169,236,0.15)', border: '#AFA9EC', text: '#CECBF6' },
+  sport: { bg: 'rgba(151,196,89,0.13)', border: '#97C459', text: '#C0DD97' },
+  home: { bg: 'rgba(136,135,128,0.13)', border: '#888780', text: '#B4B2A9' },
+  diploma: { bg: 'rgba(240,153,123,0.13)', border: '#F0997B', text: '#F5C4B3' },
+  rest: { bg: 'rgba(50,50,48,0.55)', border: '#3a3a38', text: '#888780' },
+};
+
+export interface ScheduleEvent {
+  h: number;
+  m: number;
+  dur: number;
+  label: string;
+  type: ColorType;
+}
+
+export const SCH: Record<number, ScheduleEvent[]> = {
+  1: [
+    { h: 7, m: 30, dur: 1, label: 'Подъём + утро', type: 'rest' },
+    { h: 8, m: 30, dur: 5.5, label: 'Курсы (норвежский)', type: 'courses' },
+    { h: 14, m: 0, dur: 0.5, label: 'Обед / пауза', type: 'rest' },
+    { h: 14, m: 30, dur: 1, label: 'Быт / готовка', type: 'home' },
+    { h: 15, m: 30, dur: 1.5, label: 'Спорт', type: 'sport' },
+    { h: 17, m: 0, dur: 2, label: 'Буфер / отдых', type: 'rest' },
+    { h: 19, m: 0, dur: 1, label: 'Английский (репетитор)', type: 'eng' },
+    { h: 20, m: 0, dur: 2, label: 'Программирование', type: 'code' },
+    { h: 22, m: 0, dur: 1, label: 'Завершение дня', type: 'rest' },
+  ],
+  2: [
+    { h: 7, m: 30, dur: 1, label: 'Подъём + утро', type: 'rest' },
+    { h: 8, m: 30, dur: 5.5, label: 'Курсы (норвежский)', type: 'courses' },
+    { h: 14, m: 0, dur: 0.5, label: 'Обед / пауза', type: 'rest' },
+    { h: 14, m: 30, dur: 1, label: 'Английский (самост.)', type: 'eng' },
+    { h: 15, m: 30, dur: 1, label: 'Быт / готовка', type: 'home' },
+    { h: 16, m: 30, dur: 1.5, label: 'Буфер / отдых', type: 'rest' },
+    { h: 18, m: 0, dur: 1, label: 'Дима (ученик)', type: 'student' },
+    { h: 19, m: 0, dur: 2.5, label: 'Программирование', type: 'code' },
+    { h: 21, m: 30, dur: 1.5, label: 'Завершение дня', type: 'rest' },
+  ],
+  3: [
+    { h: 7, m: 30, dur: 1, label: 'Подъём + утро', type: 'rest' },
+    { h: 8, m: 30, dur: 5.5, label: 'Курсы (норвежский)', type: 'courses' },
+    { h: 14, m: 0, dur: 0.5, label: 'Обед / пауза', type: 'rest' },
+    { h: 14, m: 30, dur: 1, label: 'Быт / готовка', type: 'home' },
+    { h: 15, m: 30, dur: 1.5, label: 'Буфер / отдых', type: 'rest' },
+    { h: 17, m: 0, dur: 2, label: 'Программирование', type: 'code' },
+    { h: 19, m: 0, dur: 1, label: 'Английский (репетитор)', type: 'eng' },
+    { h: 20, m: 0, dur: 2, label: 'Программирование', type: 'code' },
+    { h: 22, m: 0, dur: 1, label: 'Завершение дня', type: 'rest' },
+  ],
+  4: [
+    { h: 7, m: 30, dur: 1, label: 'Подъём + утро', type: 'rest' },
+    { h: 8, m: 30, dur: 5.5, label: 'Курсы (норвежский)', type: 'courses' },
+    { h: 14, m: 0, dur: 0.5, label: 'Обед / пауза', type: 'rest' },
+    { h: 14, m: 30, dur: 1, label: 'Английский (самост.)', type: 'eng' },
+    { h: 15, m: 30, dur: 1, label: 'Быт / готовка', type: 'home' },
+    { h: 16, m: 30, dur: 2.5, label: 'Буфер / отдых', type: 'rest' },
+    { h: 19, m: 0, dur: 1, label: 'Таня (ученица)', type: 'student' },
+    { h: 20, m: 0, dur: 2, label: 'Программирование', type: 'code' },
+    { h: 22, m: 0, dur: 1, label: 'Завершение дня', type: 'rest' },
+  ],
+  5: [
+    { h: 7, m: 30, dur: 1, label: 'Подъём + утро', type: 'rest' },
+    { h: 8, m: 30, dur: 5.5, label: 'Курсы (норвежский)', type: 'courses' },
+    { h: 14, m: 0, dur: 0.5, label: 'Обед / пауза', type: 'rest' },
+    { h: 14, m: 30, dur: 1, label: 'Английский (самост.)', type: 'eng' },
+    { h: 15, m: 30, dur: 1, label: 'Быт / готовка', type: 'home' },
+    { h: 16, m: 30, dur: 1.5, label: 'Спорт', type: 'sport' },
+    { h: 18, m: 0, dur: 2, label: 'Программирование', type: 'code' },
+    { h: 20, m: 0, dur: 1, label: 'Анастасия (ученица)', type: 'student' },
+    { h: 21, m: 0, dur: 1, label: 'Буфер / отдых', type: 'rest' },
+    { h: 22, m: 0, dur: 1, label: 'Завершение дня', type: 'rest' },
+  ],
+  6: [
+    { h: 9, m: 0, dur: 1, label: 'Подъём + утро', type: 'rest' },
+    { h: 10, m: 0, dur: 3, label: 'Диплом / универ', type: 'diploma' },
+    { h: 13, m: 0, dur: 1, label: 'Обед / отдых', type: 'rest' },
+    { h: 14, m: 0, dur: 3.5, label: 'Программирование', type: 'code' },
+    { h: 17, m: 30, dur: 1, label: 'Быт / готовка', type: 'home' },
+    { h: 18, m: 30, dur: 2, label: 'Свободное время', type: 'rest' },
+    { h: 20, m: 30, dur: 1.5, label: 'Программирование', type: 'code' },
+    { h: 22, m: 0, dur: 1, label: 'Завершение дня', type: 'rest' },
+  ],
+  0: [
+    { h: 9, m: 0, dur: 1.5, label: 'Подъём + утро', type: 'rest' },
+    { h: 10, m: 30, dur: 2.5, label: 'Диплом / универ', type: 'diploma' },
+    { h: 13, m: 0, dur: 1, label: 'Обед / отдых', type: 'rest' },
+    { h: 14, m: 0, dur: 3, label: 'Программирование', type: 'code' },
+    { h: 17, m: 0, dur: 2, label: 'Свободное время', type: 'rest' },
+    { h: 19, m: 0, dur: 1.5, label: 'Диплом / универ', type: 'diploma' },
+    { h: 20, m: 30, dur: 1.5, label: 'Программирование', type: 'code' },
+    { h: 22, m: 0, dur: 1, label: 'Подготовка к неделе', type: 'home' },
+  ],
+};
