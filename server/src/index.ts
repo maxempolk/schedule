@@ -1,19 +1,32 @@
-import express from 'express';
+import dotenv from 'dotenv';
 import path from 'path';
 
-const app = express();
+// Load .env before anything that reads process.env
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import authRouter from './routes/auth';
+import scheduleRouter from './routes/schedule';
+import { requireAuth } from './middleware/auth';
+
+const app  = express();
 const PORT = process.env.PORT ?? 3001;
 
 app.use(express.json());
+app.use(cookieParser());
 
-// ─── API routes ───────────────────────────────────────────────────────────────
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+app.use('/api/auth', authRouter);
+
+// ─── Protected API ────────────────────────────────────────────────────────────
+app.use('/api/schedule', requireAuth, scheduleRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', time: new Date().toISOString() });
 });
 
 // ─── Production: serve React build ────────────────────────────────────────────
-
 if (process.env.NODE_ENV === 'production') {
   const clientDist = path.join(__dirname, '..', '..', 'client', 'dist');
   app.use(express.static(clientDist));

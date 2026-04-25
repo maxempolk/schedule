@@ -1,35 +1,35 @@
 import { FC } from 'react';
-import { SCH, DAYS_RU, DAYS_SHORT, C, ScheduleEvent } from '../data';
+import { DAYS_RU, DAYS_SHORT, C, ScheduleEvent, ColorType } from '../data';
 
 interface LegendItem {
-  type: keyof typeof C;
+  type: ColorType;
   label: string;
 }
 
 const LEGEND: LegendItem[] = [
   { type: 'courses', label: 'курсы (норв.)' },
-  { type: 'eng', label: 'английский' },
+  { type: 'eng',     label: 'английский' },
   { type: 'student', label: 'ученики' },
-  { type: 'code', label: 'программирование' },
-  { type: 'sport', label: 'спорт' },
-  { type: 'home', label: 'быт' },
+  { type: 'code',    label: 'программирование' },
+  { type: 'sport',   label: 'спорт' },
+  { type: 'home',    label: 'быт' },
   { type: 'diploma', label: 'диплом / универ' },
-  { type: 'rest', label: 'отдых' },
+  { type: 'rest',    label: 'отдых' },
 ];
 
-function sumMin(evts: ScheduleEvent[], type: keyof typeof C): number {
+function sumMin(evts: ScheduleEvent[], type: ColorType): number {
   return evts.filter(e => e.type === type).reduce((a, e) => a + e.dur * 60, 0);
 }
 
 interface SidebarProps {
   viewDay: number;
+  events: ScheduleEvent[];
 }
 
-const Sidebar: FC<SidebarProps> = ({ viewDay }) => {
-  const evts = SCH[viewDay] || [];
-  const codeMin = sumMin(evts, 'code');
-  const engMin = sumMin(evts, 'eng');
-  const diplomaMin = sumMin(evts, 'diploma');
+const Sidebar: FC<SidebarProps> = ({ viewDay, events }) => {
+  const codeMin    = sumMin(events, 'code');
+  const engMin     = sumMin(events, 'eng');
+  const diplomaMin = sumMin(events, 'diploma');
 
   return (
     <aside className="sidebar">

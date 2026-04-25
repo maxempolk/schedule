@@ -225,6 +225,91 @@ header {
   flex-shrink: 0;
 }
 
+/* ── LOGIN ── */
+.app-loading {
+  color: var(--muted);
+  padding: 3rem 2rem;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.02);
+}
+
+.login-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.9rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-align: center;
+}
+
+.login-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.login-field {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  padding: 0.65rem 0.9rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.login-field::placeholder { color: var(--hint); }
+.login-field:focus { border-color: rgba(255,255,255,0.25); }
+.login-field:disabled { opacity: 0.5; }
+
+.login-error {
+  font-size: 12px;
+  color: #e24b4a;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+
+.login-btn {
+  width: 100%;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  border-radius: 3px;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.7rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.login-btn:disabled { opacity: 0.4; cursor: default; }
+.login-btn:not(:disabled):hover { opacity: 0.85; }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 680px) {
   .main { grid-template-columns: 1fr; }

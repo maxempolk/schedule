@@ -2,3 +2,5 @@ node_modules/
 dist/
 client/dist/
 server/dist/
+server/schedule.db
+server/.env
