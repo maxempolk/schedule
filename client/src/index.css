@@ -189,8 +189,42 @@ header {
   transition: transform 0.12s;
 }
 
-.evt-block:hover { transform: translateX(3px); }
+.evt-block        { cursor: grab; transition: transform 0.12s; }
+.evt-block:hover  { transform: translateX(3px); }
 .evt-block.active-block { outline: 1px solid rgba(226,75,74,0.5); }
+.evt-block.is-resizing  { outline: 1px solid rgba(255,255,255,.18); }
+
+.evt-block.is-ghost {
+  opacity: .88;
+  box-shadow: 0 8px 32px rgba(0,0,0,.65);
+  z-index: 20;
+  cursor: grabbing;
+  transform: translateX(5px) scale(1.01);
+  transition: none; /* no animation while dragging */
+}
+.evt-block.is-dimmed {
+  opacity: .45;
+  transition: none;
+}
+
+.drop-indicator {
+  position: absolute;
+  left: -8px; right: 0;
+  height: 2px;
+  background: rgba(255,255,255,.7);
+  pointer-events: none;
+  z-index: 15;
+  border-radius: 1px;
+}
+.drop-indicator::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.7);
+}
 
 .evt-name {
   font-size: 15px;
