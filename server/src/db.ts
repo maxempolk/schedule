@@ -43,7 +43,7 @@ if (count === 0) {
     { day:2, h:14, m:30, dur:1,   label:'Английский (самост.)',    type:'eng'     },
     { day:2, h:15, m:30, dur:1,   label:'Быт / готовка',           type:'home'    },
     { day:2, h:16, m:30, dur:1.5, label:'Буфер / отдых',           type:'rest'    },
-    { day:2, h:18, m:0,  dur:1,   label:'Дима (ученик)',           type:'student' },
+    { day:2, h:18, m:0,  dur:1,   label:'Tutoring session',        type:'student' },
     { day:2, h:19, m:0,  dur:2.5, label:'Программирование',        type:'code'    },
     { day:2, h:21, m:30, dur:1.5, label:'Завершение дня',          type:'rest'    },
     // Ср (3)
@@ -63,7 +63,7 @@ if (count === 0) {
     { day:4, h:14, m:30, dur:1,   label:'Английский (самост.)',    type:'eng'     },
     { day:4, h:15, m:30, dur:1,   label:'Быт / готовка',           type:'home'    },
     { day:4, h:16, m:30, dur:2.5, label:'Буфер / отдых',           type:'rest'    },
-    { day:4, h:19, m:0,  dur:1,   label:'Таня (ученица)',          type:'student' },
+    { day:4, h:19, m:0,  dur:1,   label:'Tutoring session',        type:'student' },
     { day:4, h:20, m:0,  dur:2,   label:'Программирование',        type:'code'    },
     { day:4, h:22, m:0,  dur:1,   label:'Завершение дня',          type:'rest'    },
     // Пт (5)
@@ -74,7 +74,7 @@ if (count === 0) {
     { day:5, h:15, m:30, dur:1,   label:'Быт / готовка',           type:'home'    },
     { day:5, h:16, m:30, dur:1.5, label:'Спорт',                   type:'sport'   },
     { day:5, h:18, m:0,  dur:2,   label:'Программирование',        type:'code'    },
-    { day:5, h:20, m:0,  dur:1,   label:'Анастасия (ученица)',     type:'student' },
+    { day:5, h:20, m:0,  dur:1,   label:'Tutoring session',        type:'student' },
     { day:5, h:21, m:0,  dur:1,   label:'Буфер / отдых',           type:'rest'    },
     { day:5, h:22, m:0,  dur:1,   label:'Завершение дня',          type:'rest'    },
     // Сб (6)
