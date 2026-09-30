@@ -8,6 +8,12 @@ Schedule is a small full-stack weekly planner with a timeline interface. It was
 built as a personal productivity tool and demonstrates authenticated CRUD flows,
 a React client and a lightweight Express API backed by SQLite.
 
+## Screenshots
+
+Local build showing the seeded weekly planner, event categories and current-time indicator.
+
+![Schedule timeline with seeded example events](docs/screenshots/timeline.jpg)
+
 ## Highlights
 
 - Weekly timeline with day navigation and a live current-event indicator.
