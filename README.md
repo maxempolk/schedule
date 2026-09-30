@@ -1,10 +1,14 @@
 # Schedule
 
+[Source](https://github.com/maxempolk/schedule) · [Run locally](#getting-started)
+
+## About
+
 Schedule is a small full-stack weekly planner with a timeline interface. It was
 built as a personal productivity tool and demonstrates authenticated CRUD flows,
 a React client and a lightweight Express API backed by SQLite.
 
-## Features
+## Highlights
 
 - Weekly timeline with day navigation and a live current-event indicator.
 - Create, edit and remove scheduled events.
@@ -19,6 +23,10 @@ a React client and a lightweight Express API backed by SQLite.
 - **Server:** Node.js, Express and TypeScript
 - **Storage:** SQLite via `better-sqlite3`
 - **Authentication:** JSON Web Tokens and HTTP-only cookies
+
+## Live Demo
+
+There is no public live demo. Follow [Getting Started](#getting-started) to run the client and API locally with the seeded example schedule.
 
 ## Project Structure
 
@@ -71,6 +79,3 @@ server serves the built React application when `NODE_ENV=production`.
 ```text
 GET /api/health
 ```
-
-The project is kept as a local-development example and does not currently have
-a public demo deployment.
